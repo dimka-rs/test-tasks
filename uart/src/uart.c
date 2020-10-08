@@ -65,7 +65,7 @@ uart_set_stop_bits(struct uart *uart, int stop_bits)
 }
 
 int
-uart_set_rx_cb(struct uart *uart, void (*rx_cb)(int *priv))
+uart_set_rx_cb(struct uart *uart, void (*rx_cb)(int *priv, char data))
 {
     if (uart == NULL)
         return -UART_ERR;
@@ -130,5 +130,12 @@ uart_deinit(struct uart *uart)
 
     free(uart);
 
+    return UART_OK;
+}
+
+int
+uart_push(struct uart *uart, char data)
+{
+    uart->rx_cb(&uart->id, data);
     return UART_OK;
 }

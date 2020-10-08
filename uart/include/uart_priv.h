@@ -18,7 +18,7 @@ struct uart
     /** @brief  stop bits */
     int stop_bits;
     /** @brief  RX complete callback */
-    void (*rx_cb)(int *priv);
+    void (*rx_cb)(int *priv, char data);
     /** @brief  TX complete callback */
     void (*tx_cb)(int *priv, int nbytes);
     /** @brief pointer to data not txed yet */
