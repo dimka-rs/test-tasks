@@ -7,7 +7,7 @@
 #include <fcntl.h>
 #include <unistd.h>
 
-#define BUF_SIZE (16)   /* FIXME: 128 */
+#define BUF_SIZE (128)
 
 char path_in[] = "/tmp/uart.in";
 char path_out[] = "/tmp/uart.out";
