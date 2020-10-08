@@ -23,8 +23,11 @@ int fd_out;
 static void
 uart1_rx_cb(int *priv, char data)
 {
-    tx_bufp[tx_off] = data;
-    tx_off++;
+    if (tx_off < BUF_SIZE)
+    {
+        tx_bufp[tx_off] = data;
+        tx_off++;
+    }
 
     if (tx_off >= BUF_SIZE)
     {
