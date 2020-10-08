@@ -6,7 +6,9 @@ all: $(SRC)
 	$(CC) -o $(BIN_NAME) $(SRC) -Iinclude
 
 test: all
-	python3 test.py $(BIN_NAME)
+	./uart &
+	python3 test.py /tmp/uart.in /tmp/uart.out
+	killall uart
 
 docs:
 	doxygen
