@@ -128,6 +128,9 @@ uart_deinit(struct uart *uart)
     if (uart == NULL)
         return -UART_ERR;
 
+    if (uart->enabled != 0)
+        uart_enable(uart, 0);
+
     free(uart);
 
     return UART_OK;

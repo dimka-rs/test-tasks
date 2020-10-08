@@ -2,8 +2,15 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <unistd.h>
 
-#define BUF_SIZE (16)
+#define BUF_SIZE (16)   /* FIXME: 128 */
+
+char path_in[] = "/tmp/uart.in";
+char path_out[] = "/tmp/uart.out";
 
 char tx_buf1[BUF_SIZE];
 char tx_buf2[BUF_SIZE];
@@ -11,6 +18,7 @@ char *tx_bufp = tx_buf1;
 int tx_off = 0;
 struct uart *u1, *u2;
 volatile int tx_done = 1;
+int fd_out;
 
 static void
 uart1_rx_cb(int *priv, char data)
@@ -75,17 +83,29 @@ deinit_uarts()
 
 int main(int argc, char **argv)
 {
-    int c;
+    int fd_in;
+    char data;
+    ssize_t nbytes;
 
-    system ("/bin/stty raw");
+    mkfifo(path_in, 0666);
+    mkfifo(path_out, 0666);
+
     init_uarts();
 
-    while((c = getchar()) != '.')
+    fd_in = open(path_in, O_RDONLY);
+    fd_out = open(path_out, O_WRONLY);
+
+    while(1)
     {
-        uart_push(u1, (char)c);
+        nbytes = read(fd_in, &data, 1);
+        if (nbytes == 1 && data != '.')
+        {
+            uart_push(u1, data);
+        }
     }
 
+    close(fd_out);
+    close(fd_in);
     deinit_uarts();
-    system ("/bin/stty cooked");
     return 0;
 }

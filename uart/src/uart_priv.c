@@ -1,9 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 
 #include "uart.h"
 #include "uart_priv.h"
+
+extern int fd_out;
 
 int uart_start_tx(struct uart *uart)
 {
@@ -11,7 +14,7 @@ int uart_start_tx(struct uart *uart)
 
     while (uart->cnt--)
     {
-        putchar(*p);
+        write(fd_out, p, 1);
         p++;
     }
 
